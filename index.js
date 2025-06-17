@@ -104,6 +104,10 @@ app.use((err, req, res, next) => {
     stack: process.env.NODE_ENV === 'development' && err?.stack ? err.stack : undefined
   });
 });
+app.get('/', (req, res) => {
+  res.send('🎉 AI Backend is running! Check /health for status.');
+});
+
 
 app.listen(PORT, () => {
   console.log(`AI Backend server running on port ${PORT}`);
