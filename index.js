@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
+
 const app = express();
 const PORT = process.env.PORT || 4000; // Changed to port 4000
 
@@ -25,6 +26,8 @@ console.log('Quiz routes loaded successfully');
 // Load other routes
 const summarizeRoute = require('./src/routes/summarize');
 const documentsRoute = require('./src/routes/documents');
+const ttsRoutes = require('./src/routes/tts'); // Adjust path as needed
+app.use(ttsRoutes);
 
 app.use('/api/summarize', summarizeRoute);
 app.use('/api/documents', documentsRoute);
