@@ -1,6 +1,8 @@
 // src/routes/tts.js
+const fetch = require('node-fetch');
+
 const express = require('express');
-const fetch = require('node-fetch'); // npm install node-fetch
+
 const router = express.Router();
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
