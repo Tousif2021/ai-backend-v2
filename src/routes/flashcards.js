@@ -1,6 +1,9 @@
 console.log("#########################");
 console.log("RUNNING THIS FLASHCARDS.JS:", __filename);
 console.log("#########################");
+console.log(">>> /api/flashcards POST HIT <<<");
+console.log("Request body:", req.body);
+
 
 const express = require('express');
 const pdf = require('pdf-parse');
