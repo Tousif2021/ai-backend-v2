@@ -25,6 +25,9 @@ console.log('Quiz routes loaded successfully');
 // Load other routes
 const summarizeRoute = require('./src/routes/summarize');
 const documentsRoute = require('./src/routes/documents');
+const flashcardsRoute = require('./src/routes/flashcards');
+app.use('/api/flashcards', flashcardsRoute);
+
 
 app.use('/api/summarize', summarizeRoute);
 app.use('/api/documents', documentsRoute);
