@@ -78,7 +78,7 @@ router.post('/', async (req, res) => {
     text = text.substring(0, 15000);
 
     // Summarize with Gemini (1.5 model!)
-    const model = genAI.model("gemini-1.5-flash");
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = `Summarize the following document for a student in less than 200 words. Use simple, clear language:\n\n${text}`;
 
     console.log("Sending prompt to Gemini...");
