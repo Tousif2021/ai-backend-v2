@@ -13,10 +13,18 @@ router.post('/', async (req, res) => {
 
     if (!content && file_path) {
       const { data, error } = await supabase.storage.from('documents').download(file_path);
-      if (error) return res.status(400).json({ error: 'Failed to download document' });
+      if (error) {
+        console.error('Supabase download error:', error);
+        return res.status(400).json({ error: 'Failed to download document' });
+      }
 
       const buffer = await data.arrayBuffer();
-      content = await extractTextFromPDF(Buffer.from(buffer));
+      try {
+        content = await extractTextFromPDF(Buffer.from(buffer));
+      } catch (pdfErr) {
+        console.error('PDF parsing error:', pdfErr);
+        return res.status(500).json({ error: 'Failed to parse PDF document' });
+      }
     }
 
     if (!content || content.trim().length < 50) {
@@ -24,12 +32,12 @@ router.post('/', async (req, res) => {
     }
 
     const flashcards = await generateFlashcardsFromText(content);
-
     res.json({ flashcards });
   } catch (err) {
     console.error('Flashcards API error:', err);
     res.status(500).json({ error: 'Failed to generate flashcards' });
   }
 });
+
 
 module.exports = router;
