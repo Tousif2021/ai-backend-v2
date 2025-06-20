@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
       content = await extractTextFromPDF(Buffer.from(buffer));
     }
 
-    if (!content || content.trim().length < 50) {
+    if (!content || content.trim().length === 0) {
       return res.status(400).json({ error: 'Document text is too short or missing' });
     }
 
@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 
     res.json({ flashcards });
   } catch (err) {
-    console.error('Flashcards API error:', err);
+    console.error('Flashcards API error:', err.message, err.stack);
     
     // Provide more detailed error information in development
     if (process.env.NODE_ENV === 'development') {
