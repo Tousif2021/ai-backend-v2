@@ -1,6 +1,6 @@
 const express = require('express');
 const { generateFlashcardsFromText } = require('../../lib/generateFlashcards');
-const { supabase } = require('../../lib/supabaseClient');
+const { supabase, supabaseAdmin } = require('../../lib/supabaseClient');
 const { extractTextFromPDF } = require('../../lib/pdf');
 
 const router = express.Router();
