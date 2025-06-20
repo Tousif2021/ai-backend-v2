@@ -1,9 +1,6 @@
 console.log("#########################");
 console.log("RUNNING THIS FLASHCARDS.JS:", __filename);
 console.log("#########################");
-console.log(">>> /api/flashcards POST HIT <<<");
-console.log("Request body:", req.body);
-
 
 const express = require('express');
 const pdf = require('pdf-parse');
@@ -21,6 +18,8 @@ router.get('/test', (req, res) => {
 
 router.post('/', async (req, res) => {
   console.log(">>> /api/flashcards POST HIT <<<");
+  console.log("Request body:", req.body);
+
   try {
     const { file_path } = req.body;
     if (!file_path) {
@@ -29,13 +28,13 @@ router.post('/', async (req, res) => {
     }
     console.log("File path received:", file_path);
 
-    // Download the document from Supabase storage using file_path
-    // IMPORTANT: Use your supabase client here, properly initialized with service role key
+    // Initialize Supabase client with service role key (keep this secure)
     const { createClient } = require('@supabase/supabase-js');
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    // Download the PDF file buffer from Supabase storage
     const { data, error } = await supabase.storage
       .from('documents')
       .download(file_path);
@@ -49,14 +48,13 @@ router.post('/', async (req, res) => {
     const buffer = Buffer.from(fileBuffer);
     console.log("Document file buffer size:", buffer.length);
 
-    // Detect PDF by file extension or MIME-type (optional here since your storage uses file_path)
+    // Check if file is PDF by extension
     if (!file_path.toLowerCase().endsWith('.pdf')) {
       throw new Error("Only PDF files are supported for flashcard generation.");
     }
 
     // Extract text from PDF
-    const pdfParse = require('pdf-parse');
-    const pdfData = await pdfParse(buffer);
+    const pdfData = await pdf(buffer);
     const text = pdfData.text;
 
     if (!text || !text.trim()) {
@@ -64,10 +62,10 @@ router.post('/', async (req, res) => {
     }
     console.log("Extracted text length:", text.length);
 
-    // Limit text length if necessary to avoid hitting model token limits
+    // Limit text length to avoid token limit issues
     const limitedText = text.substring(0, 15000);
 
-    // Generate flashcards from extracted text using your AI logic
+    // Generate flashcards from text using your AI model
     const flashcards = await generateFlashcardsFromText(limitedText);
 
     console.log("Generated flashcards count:", flashcards.length);
